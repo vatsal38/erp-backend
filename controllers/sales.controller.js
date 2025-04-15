@@ -31,6 +31,7 @@ exports.getSales = async (req, res) => {
     message: "Sales retrieved successfully.",
     data: sales,
   });
+  console.log('sales::: ', sales);
 };
 
 exports.updateSalesStatus = async (req, res) => {
@@ -70,4 +71,20 @@ exports.getInvoice = async (req, res) => {
   };
 
   generateInvoice(mappedSale, customer, res);
+};
+
+exports.updateSales = async (req, res) => {
+  const sales = await Sales.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.json({
+    success: true,
+    message: "Bill update successfully.",
+    data: sales,
+  });
+};
+
+exports.deleteSales = async (req, res) => {
+  await Sales.findByIdAndDelete(req.params.id);
+  res.json({ success: true, message: "Bill deleted successfully." });
 };

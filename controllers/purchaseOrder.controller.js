@@ -37,3 +37,8 @@ exports.updatePO = async (req, res) => {
     data: po,
   });
 };
+
+exports.deletePO = async (req, res) => {
+  await PurchaseOrder.findByIdAndDelete(req.params.id);
+  res.json({ success: true, message: "Purchase order deleted successfully." });
+};

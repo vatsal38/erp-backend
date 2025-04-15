@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    h1 { text-align: center; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .total {
+      text-align: right;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Invoice</h1>
+  <p><strong>Customer:</strong> {{customerName}}</p>
+  <p><strong>Date:</strong> {{date}}</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{quantity}}</td>
+          <td>₹{{unitPrice}}</td>
+          <td>₹{{total}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <p class="total">Grand Total: ₹{{grandTotal}}</p>
+</body>
+</html>

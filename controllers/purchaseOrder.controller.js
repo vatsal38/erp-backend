@@ -19,7 +19,7 @@ exports.confirmPO = async (req, res) => {
 
   for (let item of po.products) {
     await Product.findByIdAndUpdate(item.product, {
-      $inc: { quantity: item.quantity },
+      $inc: { quantityAvailable: item.quantity },
     });
   }
   po.status = "Confirmed";

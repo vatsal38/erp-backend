@@ -28,10 +28,9 @@ exports.getSales = async (req, res) => {
     .populate("products.product");
   res.json({
     success: true,
-    message: "Sales retrieved successfully.",
+    message: "Sales retrieved successfully.", 
     data: sales,
   });
-  console.log('sales::: ', sales);
 };
 
 exports.updateSalesStatus = async (req, res) => {

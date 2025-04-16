@@ -6,10 +6,6 @@ exports.createPO = async (req, res) => {
   let total = 0;
   for (const item of products) {
     const prod = await Product.findById(item.product);
-    if (!prod || prod.quantityAvailable < item.quantity)
-      return res
-        .status(400)
-        .json({ success: false, message: "Stock unavailable" });
     total += item.quantity * prod.unitPrice;
   }
 

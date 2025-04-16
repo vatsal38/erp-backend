@@ -1,11 +1,23 @@
 const mongoose = require("mongoose");
 const salesSchema = new mongoose.Schema(
   {
-    customer: { type: mongoose.Schema.Types.ObjectId, ref: "Customer" },
+    customer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer",
+      required: true,
+    },
     products: [
       {
-        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-        quantity: Number,
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          min: 1,
+          required: true,
+        },
       },
     ],
     totalAmount: Number,
@@ -14,7 +26,6 @@ const salesSchema = new mongoose.Schema(
       enum: ["Pending", "Confirmed", "Cancelled"],
       default: "Pending",
     },
-    createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

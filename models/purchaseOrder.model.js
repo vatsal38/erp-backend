@@ -4,8 +4,12 @@ const PurchaseOrderSchema = new mongoose.Schema(
     supplierName: String,
     products: [
       {
-        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-        quantity: Number,
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: { type: Number, required: true },
       },
     ],
     status: {
@@ -13,6 +17,7 @@ const PurchaseOrderSchema = new mongoose.Schema(
       enum: ["Pending", "Confirmed"],
       default: "Pending",
     },
+    totalAmount: Number,
   },
   { timestamps: true }
 );

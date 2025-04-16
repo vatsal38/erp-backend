@@ -2,7 +2,23 @@ const PurchaseOrder = require("../models/purchaseOrder.model");
 const Product = require("../models/product.model");
 
 exports.createPO = async (req, res) => {
-  const po = await PurchaseOrder.create(req.body);
+  const { supplierName, products } = req.body;
+  let total = 0;
+  for (const item of products) {
+    const prod = await Product.findById(item.product);
+    if (!prod || prod.quantityAvailable < item.quantity)
+      return res
+        .status(400)
+        .json({ success: false, message: "Stock unavailable" });
+    total += item.quantity * prod.unitPrice;
+  }
+
+  const po = await PurchaseOrder.create({
+    supplierName,
+    products,
+    totalAmount: total,
+  });
+  console.log("total::: ", total);
   res
     .status(201)
     .json({ success: true, message: "Purchase order created.", data: po });
@@ -28,12 +44,32 @@ exports.confirmPO = async (req, res) => {
 };
 
 exports.updatePO = async (req, res) => {
-  const po = await PurchaseOrder.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  const { products, supplierName } = req.body;
+
+  let total = 0;
+  for (const item of products) {
+    const prod = await Product.findById(item.product);
+    if (!prod)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid product in request" });
+
+    total += item.quantity * prod.unitPrice;
+  }
+
+  const po = await PurchaseOrder.findByIdAndUpdate(
+    req.params.id,
+    {
+      products,
+      supplierName,
+      totalAmount: total,
+    },
+    { new: true }
+  );
+
   res.json({
     success: true,
-    message: "Product order update successfully.",
+    message: "Purchase order updated successfully.",
     data: po,
   });
 };

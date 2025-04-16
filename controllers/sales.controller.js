@@ -28,7 +28,7 @@ exports.getSales = async (req, res) => {
     .populate("products.product");
   res.json({
     success: true,
-    message: "Sales retrieved successfully.", 
+    message: "Sales retrieved successfully.",
     data: sales,
   });
 };
@@ -73,13 +73,40 @@ exports.getInvoice = async (req, res) => {
 };
 
 exports.updateSales = async (req, res) => {
-  const sales = await Sales.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  const { customer, products, status } = req.body;
+
+  if (!products || products.length === 0) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Products are required" });
+  }
+
+  let total = 0;
+  for (const item of products) {
+    const prod = await Product.findById(item.product);
+    if (!prod)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid product in request" });
+
+    total += item.quantity * prod.unitPrice;
+  }
+
+  const updatedSale = await Sales.findByIdAndUpdate(
+    req.params.id,
+    {
+      customer,
+      products,
+      status,
+      totalAmount: total,
+    },
+    { new: true }
+  );
+
   res.json({
     success: true,
-    message: "Bill update successfully.",
-    data: sales,
+    message: "Bill updated successfully.",
+    data: updatedSale,
   });
 };
 
